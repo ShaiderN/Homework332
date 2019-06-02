@@ -2,8 +2,6 @@ package com.example.homework332;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +9,6 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,18 +16,13 @@ public class MainActivity extends AppCompatActivity {
     private Spinner languageSpinner;
     private Spinner coloursSpinner;
     private Button btnOk;
-    private static int sTheme;
-
-    public final static int THEME_BLACK = 0;
-    public final static int THEME_BLUE = 1;
-    public final static int THEME_GREEN = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_main);
         initViews();
-        onActivityCreateSetTheme(this);
     }
 
     private void initViews() {
@@ -39,28 +31,6 @@ public class MainActivity extends AppCompatActivity {
         btnOk = findViewById(R.id.buttonOk);
         initLanguageSpinner();
         initColoursSpinner();
-    }
-
-    public static void changeToTheme(Activity activity, int theme) {
-        sTheme = theme;
-        activity.finish();
-
-        activity.startActivity(new Intent(activity, activity.getClass()));
-    }
-
-    public static void onActivityCreateSetTheme(Activity activity) {
-        switch (sTheme) {
-            default:
-            case THEME_BLACK:
-                activity.setTheme(R.style.AppThemeBlack);
-                break;
-            case THEME_BLUE:
-                activity.setTheme(R.style.AppThemeBlue);
-                break;
-            case THEME_GREEN:
-                activity.setTheme(R.style.AppThemeGreen);
-                break;
-        }
     }
 
     private void initLanguageSpinner() {
@@ -81,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void interfaceLanguage(String language) {
+    public void interfaceLanguage(String language) {
         ArrayAdapter<CharSequence> adapter = null;
         switch (language) {
             case "Русский" :
@@ -109,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 break;
         }
+
         if (adapter != null) {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             languageSpinner.setAdapter(adapter);
@@ -142,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 btnOk.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        changeToTheme(this, THEME_BLACK);
+                        Utils.changeToTheme(MainActivity.this, Utils.THEME_BLACK);
                     }
                 });
                 break;
@@ -151,11 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 btnOk.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Locale locale = new Locale("ru");
-                        Configuration config = new Configuration();
-                        config.setLocale(locale);
-                        getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
-                        recreate();
+                        Utils.changeToTheme(MainActivity.this, Utils.THEME_BLUE);
                     }
                 });
                 break;
@@ -164,14 +131,15 @@ public class MainActivity extends AppCompatActivity {
                 btnOk.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Locale locale = new Locale("ru");
-                        Configuration config = new Configuration();
-                        config.setLocale(locale);
-                        getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
-                        recreate();
+                        Utils.changeToTheme(MainActivity.this, Utils.THEME_GREEN);
                     }
                 });
                 break;
+        }
+
+        if (adapter != null) {
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            languageSpinner.setAdapter(adapter);
         }
     }
 }
